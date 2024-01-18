@@ -14,7 +14,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 from decouple import config
 
+
 load_dotenv()
+
 
 APP_ID = os.getenv('APP_ID'),
 # APP_ID = config('API_ID')
@@ -88,8 +90,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('NAME'),
-        'USER': os.getenv('USER'),
-        'PASSWORD': os.getenv('PASSWORD'),
+        'USER': 'AkashBalani',
+        'PASSWORD': 'HabibiIs110%Love',
         'HOST': os.getenv('HOST'),
         'PORT': os.getenv('PORT'),
     }

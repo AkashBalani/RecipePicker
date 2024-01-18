@@ -1,2 +1,39 @@
 logs/
 db.sqlite3
+# Virtual environment
+venv/
+
+# Django settings
+*.pyc
+*.pyo
+__pycache__/
+
+# Local development settings
+local_settings.py
+
+# Database
+db.sqlite3
+
+# Media files
+media/
+
+# Static files
+staticfiles/
+
+# Logs
+*.log
+
+# Compiled Python files
+*.pyc
+
+# Migrations
+**/migrations/**
+**/migrations/**
+
+
+**/bin/**
+
+**/lib/**
+# Environment variables
+# Uncomment this when making the repo public
+# .env

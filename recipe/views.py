@@ -8,13 +8,18 @@ import logging
 from django.views.decorators.http import require_GET
 from django.conf import settings
 
+logger = logging.getLogger(__name__)
+
+
 class IngredientListCreateView(generics.ListCreateAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
 
+
 class RecipeListCreateView(generics.ListCreateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+
 
 @require_GET
 def find_recipes(request):
@@ -22,23 +27,34 @@ def find_recipes(request):
 
     try:
 
-      ingredients = request.GET.getlist('ingredient')
+        ingredients = request.GET.getlist('ingredient')
 
-      if not ingredients:
-          return JsonResponse({'error': 'Please provide at least one ingredient'}, status=400)
+        excluded = request.GET.getlist('exclude')
 
-      endpoint = 'https://api.edamam.com/search'
+        if not ingredients:
+            return JsonResponse({'error': 'Please provide at least one ingredient'}, status=400)
 
-      params = {
-          'q': ','.join(ingredients),
-          'app_id': settings.APP_ID,
-          'app_key': settings.APP_KEY,
-      }
+        endpoint = 'https://api.edamam.com/search'
 
-      response = requests.get(endpoint, params=params)
+        if excluded:
+            params = {
+                'q': ','.join(ingredients),
+                'excluded': ','.join(excluded),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+            }
 
-      data = response.json()
-      return JsonResponse(data)
+        else:
+            params = {
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+            }
+
+        response = requests.get(endpoint, params=params)
+
+        data = response.json()
+        return JsonResponse(data)
     except Exception as e:
         logger.exception("Error in find_recipes view: %s", str(e))
 
