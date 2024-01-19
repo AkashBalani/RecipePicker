@@ -36,7 +36,7 @@ SECRET_KEY = 'django-insecure-)*1vb6nt7s%bsuq+3g5dz+321%idf_%!s2qvz3p&$=6^xkyum2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -87,14 +87,21 @@ WSGI_APPLICATION = 'recipePicker1.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'Ingredients',
+#         'USER': 'AkashBalani',
+#         'PASSWORD': 'HabibiIs110%Love',
+#         'HOST': '172.19.0.2',
+#         'PORT': '3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('NAME'),
-        'USER': 'AkashBalani',
-        'PASSWORD': 'HabibiIs110%Love',
-        'HOST': os.getenv('HOST'),
-        'PORT': os.getenv('PORT'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
     }
 }
 
