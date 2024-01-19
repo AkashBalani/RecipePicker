@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'recipe',
+    'ingredients',
 ]
 
 MIDDLEWARE = [
@@ -139,7 +140,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGGING_DIR = os.path.join(BASE_DIR, 'logs')  # Define a directory for logs (create it if not exists)
+# Define a directory for logs (create it if not exists)
+LOGGING_DIR = os.path.join(BASE_DIR, 'logs')
 os.makedirs(LOGGING_DIR, exist_ok=True)
 
 LOGGING = {
@@ -147,9 +149,11 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'file': {
-            'level': 'DEBUG',  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+            # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(LOGGING_DIR, 'django.log'),  # Specify the log file path
+            # Specify the log file path
+            'filename': os.path.join(LOGGING_DIR, 'django.log'),
         },
     },
     'loggers': {
