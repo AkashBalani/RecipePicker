@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IngredientListCreateView, RecipeListCreateView, find_recipes
+from .views import IngredientListCreateView, RecipeListCreateView, find_recipes, metrics_view
 
 app_name = 'recipes'
 
@@ -8,4 +8,5 @@ urlpatterns = [
          name='ingredient-list-create'),
     path('recipes/', RecipeListCreateView.as_view(), name='recipe-list-create'),
     path('find_recipes/', find_recipes, name='find_recipes'),
+    path('metrics/', metrics_view, name='metrics'),
 ]

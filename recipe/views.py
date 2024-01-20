@@ -8,6 +8,8 @@ import logging
 from django.views.decorators.http import require_GET
 from django.conf import settings
 from urllib.parse import quote
+from prometheus_client import Counter, generate_latest, REGISTRY
+from django.http import HttpResponse
 
 logger = logging.getLogger(__name__)
 
@@ -75,3 +77,20 @@ def find_recipes(request):
         logger.exception("Error in find_recipes view: %s", str(e))
 
         return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
+
+
+requests_counter = Counter('django_http_requests_total', 'Total HTTP Requests')
+
+
+def some_view(request):
+    # Increment the counter metric on each request
+    requests_counter.inc()
+    # Your view logic here
+    return HttpResponse("Hello, world!")
+
+
+def metrics_view(request):
+    # Expose the /metrics endpoint for Prometheus to scrape
+    response = HttpResponse(generate_latest(REGISTRY))
+    response['Content-Type'] = 'text/plain'
+    return response

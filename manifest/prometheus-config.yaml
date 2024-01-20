@@ -12,3 +12,4 @@ data:
       - job_name: 'django'
         static_configs:
           - targets: ['django-service:8000']
+        metrics_path: '/api/metrics'
