@@ -37,3 +37,5 @@ staticfiles/
 # Environment variables
 # Uncomment this when making the repo public
 # .env
+
+**/db/**

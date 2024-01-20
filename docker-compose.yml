@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  db:
+    platform: linux/x86_64
+    image: mysql:8
+    ports:
+      - '3306:3306'
+    environment:
+       MYSQL_DATABASE: 'Ingredients'
+       MYSQL_USER: 'AkashBalani'
+       MYSQL_PASSWORD: 'HabibiIs110%Love'
+       MYSQL_ROOT_PASSWORD: 'password'
+    volumes:
+      - /tmp/app/mysqld:/var/run/mysqld
+      - ./db:/var/lib/mysql
+    # networks:
+    #   - python-network
+  web:
+    build: .
+    command: sh -c "sleep 20 && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+      - /tmp/app/mysqld:/run/mysqld
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    # networks:
+    #   - python-network
+# networks:
+#   python-network:
+#     driver: bridge
