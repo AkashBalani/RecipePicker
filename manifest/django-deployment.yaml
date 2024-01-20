@@ -1,0 +1,61 @@
+# django-deployment.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: django
+  template:
+    metadata:
+      labels:
+        app: django
+    spec:
+      initContainers:
+        - name: init-django
+          image: akashbalani/recipe:latest
+          command: ["sh"]
+          args:
+            - /app/init-container.sh
+          volumeMounts:
+            - name: init-script-volume
+              mountPath: /app/manifest
+      containers:
+        - name: django-container
+          image: akashbalani/recipe:latest
+          env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: database
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+      volumes:
+        - name: init-script-volume
+          persistentVolumeClaim:
+            claimName: init-script-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-service
+spec:
+  selector:
+    app: django
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: LoadBalancer

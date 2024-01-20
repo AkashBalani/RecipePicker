@@ -1,0 +1,13 @@
+# pv.yaml
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: init-script-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "$(pwd)"

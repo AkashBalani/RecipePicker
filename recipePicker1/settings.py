@@ -93,7 +93,7 @@ DATABASES = {
         'NAME': os.getenv('NAME'),
         'USER': os.getenv('USER'),
         'PASSWORD': os.getenv('PASSWORD'),
-        'HOST': 'db',
+        'HOST': 'mysql-service',
         'PORT': '3306',
     }
 }
