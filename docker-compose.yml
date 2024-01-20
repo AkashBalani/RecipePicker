@@ -6,11 +6,13 @@ services:
     image: mysql:8
     ports:
       - '3306:3306'
+    env_file:
+      - .env
     environment:
-       MYSQL_DATABASE: 'Ingredients'
-       MYSQL_USER: 'AkashBalani'
-       MYSQL_PASSWORD: 'HabibiIs110%Love'
-       MYSQL_ROOT_PASSWORD: 'password'
+       MYSQL_DATABASE: ${NAME}
+       MYSQL_USER: ${USER}
+       MYSQL_PASSWORD: ${PASSWORD}
+       MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
     volumes:
       - /tmp/app/mysqld:/var/run/mysqld
       - ./db:/var/lib/mysql
