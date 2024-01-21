@@ -1,0 +1,7 @@
+# falco-rules.yaml
+
+- rule: Shell Shock Exploitation
+  desc: An attempt to exploit Shell Shock was detected
+  condition: shell_executed and proc.cmdline = "bash"
+  output: "Shell Shock exploitation attempt by container (user=%user.name command=%proc.cmdline)"
+  priority: WARNING

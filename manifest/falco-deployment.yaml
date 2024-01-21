@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: falco-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: falco
+  template:
+    metadata:
+      labels:
+        app: falco
+    spec:
+      containers:
+        - name: falco-container
+          image: falcosecurity/falco:latest
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: falco-config
+              mountPath: /etc/falco-config
+            - name: falco-rules
+              mountPath: /etc/falco-rules
+      volumes:
+        - name: falco-config
+          configMap:
+            name: falco-config
+        - name: falco-rules
+          configMap:
+            name: falco-rules
