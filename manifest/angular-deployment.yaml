@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: angular
+  template:
+    metadata:
+      labels:
+        app: angular
+    spec:
+      containers:
+        - name: angular-container
+          image: akashbalani/recipefront:latest
+          ports:
+            - containerPort: 4200
+        - name: envoy-sidecar
+          image: envoyproxy/envoy:v1.19.0
+          args:
+            - "--config-path"
+            - "/etc/envoy/envoy.yaml"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: angular-service
+spec:
+  selector:
+    app: angular
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+      nodePort: 30001
+  type: NodePort
