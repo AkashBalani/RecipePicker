@@ -1,4 +1,3 @@
-import ssl
 from django.shortcuts import render
 from .models import Recipe, Ingredient
 from rest_framework import generics
@@ -70,8 +69,7 @@ def find_recipes(request):
                 'app_key': settings.APP_KEY,
             }
 
-        response = requests.get(endpoint, params=params,
-                                verify=True, tls_version=ssl.PROTOCOL_TLSv1_2)
+        response = requests.get(endpoint, params=params)
 
         data = response.json()
         return JsonResponse(data, safe=False)
