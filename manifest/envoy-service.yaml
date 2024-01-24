@@ -6,12 +6,12 @@ spec:
   selector:
     app: envoy
   ports:
-    - name: djano
+    - name: django
       protocol: TCP
-      port: 8081
-      targetPort: 8080
+      port: 8001
+      targetPort: 8000
     - name: angular
       protocol: TCP
-      port: 8082
-      targetPort: 8083
+      port: 4201
+      targetPort: 4200
   type: LoadBalancer

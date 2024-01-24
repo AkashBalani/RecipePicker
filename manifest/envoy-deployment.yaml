@@ -16,5 +16,5 @@ spec:
         - name: envoy
           image: akashbalani/recipeenvoy:latest
           ports:
-            - containerPort: 8081
-            - containerPort: 8082
+            - containerPort: 8001
+            - containerPort: 4201
