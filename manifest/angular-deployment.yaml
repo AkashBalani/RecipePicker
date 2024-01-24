@@ -17,11 +17,11 @@ spec:
           image: akashbalani/recipefront:latest
           ports:
             - containerPort: 4200
-        - name: envoy-sidecar
-          image: envoyproxy/envoy:v1.19.0
-          args:
-            - "--config-path"
-            - "/etc/envoy/envoy.yaml"
+        # - name: envoy-sidecar
+        #   image: envoyproxy/envoy:v1.19.0
+        #   args:
+        #     - "--config-path"
+        #     - "/etc/envoy/envoy.yaml"
 ---
 apiVersion: v1
 kind: Service
@@ -32,7 +32,7 @@ spec:
     app: angular
   ports:
     - protocol: TCP
-      port: 8082
-      targetPort: 8082
-      nodePort: 30001
-  type: NodePort
+      port: 4200
+      targetPort: 4200
+      # nodePort: 30001
+  type: LoadBalancer

@@ -44,12 +44,12 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: password
-        - name: envoy-sidecar
-          image: akashbalani/recipeenvoy:latest
-          command:
-            - envoy
-            - "--config-path"
-            - "/etc/envoy/envoy.yaml"
+        # - name: envoy-sidecar
+        #   image: akashbalani/recipeenvoy:latest
+        #   command:
+        #     - envoy
+        #     - "--config-path"
+        #     - "/etc/envoy/envoy.yaml"
       volumes:
         - name: init-script-volume
           persistentVolumeClaim:
@@ -64,7 +64,7 @@ spec:
     app: django
   ports:
     - protocol: TCP
-      port: 8081
-      targetPort: 8081
-      nodePort: 30000
-  type: NodePort
+      port: 8000
+      targetPort: 8000
+      # nodePort: 30000
+  type: LoadBalancer
