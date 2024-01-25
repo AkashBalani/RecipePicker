@@ -17,11 +17,13 @@ spec:
           image: akashbalani/recipefront:latest
           ports:
             - containerPort: 4200
-        - name: envoy-sidecar
-          image: envoyproxy/envoy:v1.19.0
-          args:
-            - "--config-path"
-            - "/etc/envoy/envoy.yaml"
+        # - name: envoy-sidecar
+        #   image: envoyproxy/envoy:v1.19.0
+        #   args:
+        #     - "--config-path"
+        #     - "/etc/envoy/envoy.yaml"
+        #   ports:
+        #     - containerPort: 4201
 ---
 apiVersion: v1
 kind: Service
