@@ -8,11 +8,22 @@ spec:
   gateways:
     - istio-system/my-gateway
   http:
-    - route:
+    - match:
+        - uri:
+            prefix: /django
+      route:
         - destination:
             host: django-service.default.svc.cluster.local
             port:
               number: 8000
+    - match:
+        - uri:
+            prefix: /angular
+      route:
+        - destination:
+            host: angular-service.default.svc.cluster.local
+            port:
+              number: 4200
       # match:
       #   - uri:
       #       prefix: /django
