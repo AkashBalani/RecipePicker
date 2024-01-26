@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loki-deployment
+  labels:
+    app: loki
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loki
+  template:
+    metadata:
+      labels:
+        app: loki
+    spec:
+      containers:
+        - name: loki
+          image: grafana/loki:latest
+          ports:
+            - containerPort: 3100
+        - name: health-check
+          image: curlimages/curl:latest
+          command: ["/bin/sh"]
+          args:
+            [
+              "-c",
+              "while true; do if curl -f http://angular-service:4200/angular; then sleep 10; else exit 1; fi; done",
+            ]
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - if curl -f http://angular-service:4200/angular; then exit 0; else exit 1; fi
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - if curl -f http://angular-service:4200/angular; then exit 0; else exit 1; fi
+            initialDelaySeconds: 5
+            periodSeconds: 10
