@@ -24,6 +24,14 @@ class RecipeListCreateView(generics.ListCreateAPIView):
     serializer_class = RecipeSerializer
 
 
+def health_check(request):
+    return HttpResponse("OK")
+
+
+def ready_check(request):
+    return HttpResponse("OK")
+
+
 @require_GET
 def find_recipes(request):
     logger = logging.getLogger(__name__)
