@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: elasticsearch
+  name: elasticsearch-statefulset
+  namespace: elastic-stack
   annotations:
     sidecar.istio.io/inject: "true"
 spec:
@@ -23,3 +24,17 @@ spec:
           env:
             - name: discovery.type
               value: single-node
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+  namespace: elastic-stack
+spec:
+  selector:
+    app: elasticsearch
+  ports:
+    - protocol: TCP
+      port: 9200
+      targetPort: 9200
+  type: LoadBalancer

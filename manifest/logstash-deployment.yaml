@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: logstash-deployment
+  namespace: elastic-stack
   annotations:
     sidecar.istio.io/inject: "true"
 spec:
