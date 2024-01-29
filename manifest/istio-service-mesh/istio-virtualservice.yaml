@@ -40,11 +40,11 @@ spec:
             host: kibana-service.elastic-stack.svc.cluster.local
             port:
               number: 5601
-    - match:
-        - uri:
-            prefix: /grafana
-      route:
-        - destination:
-            host: grafana-service.prometheus-stack.svc.cluster.local
-            port:
-              number: 3000
+    # - match:
+    #     - uri:
+    #         prefix: /grafana
+    #   route:
+    #     - destination:
+    #         host: grafana-service.prometheus-stack.svc.cluster.local
+    #         port:
+    #           number: 3000
