@@ -26,14 +26,14 @@ spec:
           args:
             [
               "-c",
-              "while true; do if curl -f http://angular-service:4200/angular/health; then sleep 10; else exit 1; fi; done",
+              "while true; do if curl -f http://angular-service.default.svc.cluster.local:4200/angular/health; then sleep 10; else exit 1; fi; done",
             ]
           livenessProbe:
             exec:
               command:
                 - /bin/sh
                 - -c
-                - if curl -f http://angular-service:4200/angular/health; then exit 0; else exit 1; fi
+                - if curl -f http://angular-service.default.svc.cluster.local:4200/angular/health; then exit 0; else exit 1; fi
             initialDelaySeconds: 5
             periodSeconds: 10
           readinessProbe:
@@ -41,7 +41,7 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - if curl -f http://angular-service:4200/angular/ready; then exit 0; else exit 1; fi
+                - if curl -f http://angular-service.default.svc.cluster.local:4200/angular/ready; then exit 0; else exit 1; fi
             initialDelaySeconds: 5
             periodSeconds: 10
 ---
