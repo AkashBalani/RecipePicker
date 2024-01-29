@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: falco-deployment
+  namespace: falco-stack
 spec:
   replicas: 1
   selector:
@@ -29,3 +30,17 @@ spec:
         - name: falco-rules
           configMap:
             name: falco-rules
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: falco-service
+  namespace: falco-stack
+spec:
+  selector:
+    app: falco
+  ports:
+    - protocol: TCP
+      port: 5060
+      targetPort: 5060
+  type: ClusterIP
