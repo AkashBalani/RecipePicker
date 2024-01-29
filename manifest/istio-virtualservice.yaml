@@ -24,14 +24,19 @@ spec:
             host: angular-service.default.svc.cluster.local
             port:
               number: 4200
-      # match:
-      #   - uri:
-      #       prefix: /django
-    # - route:
-    #     - destination:
-    #         host: angular-service
-    #         port:
-    #           number: 4200
-    #   match:
-    #     - uri:
-    #         prefix: /angular
+    - match:
+        - uri:
+            prefix: /elasticsearch
+      route:
+        - destination:
+            host: elasticsearch.elastic-stack.svc.cluster.local
+            port:
+              number: 9200
+    - match:
+        - uri:
+            prefix: /kibana
+      route:
+        - destination:
+            host: kibana.elastic-stack.svc.cluster.local
+            port:
+              number: 5601

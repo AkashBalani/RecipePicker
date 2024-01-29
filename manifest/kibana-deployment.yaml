@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kibana
+  name: kibana-deployment
+  namespace: elastic-stack
   annotations:
     sidecar.istio.io/inject: "true"
 spec:
@@ -18,7 +19,24 @@ spec:
         - name: kibana
           env:
             - name: ELASTICSEARCH_HOSTS
-              value: "http://elasticsearch-0.elasticsearch:9200"
+              value: "http://elasticsearch-0.elasticsearch.elastic-stack.svc.cluster.local:9200"
           image: docker.elastic.co/kibana/kibana:7.17.17
           ports:
             - containerPort: 5601
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana-service
+  namespace: elastic-stack
+  annotations:
+    sidecar.istio.io/inject: "true"
+spec:
+  selector:
+    app: kibana
+  ports:
+    - name: http
+      protocol: TCP
+      port: 5601
+      targetPort: 5601
+  type: LoadBalancer
