@@ -29,7 +29,7 @@ spec:
             prefix: /elasticsearch
       route:
         - destination:
-            host: elasticsearch.elastic-stack.svc.cluster.local
+            host: elasticsearch-service.elastic-stack.svc.cluster.local
             port:
               number: 9200
     - match:
@@ -37,6 +37,14 @@ spec:
             prefix: /kibana
       route:
         - destination:
-            host: kibana.elastic-stack.svc.cluster.local
+            host: kibana-service.elastic-stack.svc.cluster.local
             port:
               number: 5601
+    - match:
+        - uri:
+            prefix: /grafana
+      route:
+        - destination:
+            host: grafana-service.prometheus-stack.svc.cluster.local
+            port:
+              number: 3000

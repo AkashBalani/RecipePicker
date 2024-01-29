@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: promtail
+  name: promtail-deployment
   namespace: prometheus-stack
 spec:
   replicas: 1
