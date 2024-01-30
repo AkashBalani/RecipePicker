@@ -16,6 +16,18 @@ spec:
             host: django-service.default.svc.cluster.local
             port:
               number: 8000
+      corsPolicy:
+        allowOrigins:
+          - exact: "*"
+        allowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - PATCH
+          - OPTIONS
+        allowHeaders:
+          - "*"
     - match:
         - uri:
             prefix: /angular
@@ -24,6 +36,18 @@ spec:
             host: angular-service.default.svc.cluster.local
             port:
               number: 4200
+      corsPolicy:
+        allowOrigins:
+          - exact: "*"
+        allowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - PATCH
+          - OPTIONS
+        allowHeaders:
+          - "*"
     - match:
         - uri:
             prefix: /elasticsearch
