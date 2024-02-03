@@ -10,6 +10,7 @@ from django.conf import settings
 from urllib.parse import quote
 from prometheus_client import Counter, generate_latest, REGISTRY
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_protect
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,7 @@ def ready_check(request):
     return HttpResponse("OK")
 
 
+@csrf_protect
 @require_GET
 def find_recipes(request):
     logger = logging.getLogger(__name__)
@@ -44,12 +46,12 @@ def find_recipes(request):
 
         calcium = request.GET.get('calcium')
 
-        print(f'Raw calcium value: {calcium}')
+        # print(f'Raw calcium value: {calcium}')
 
         if calcium:
             calcium = calcium.strip()  # Remove leading and trailing whitespaces
 
-        print(f'Before encoding: {calcium}')
+        # print(f'Before encoding: {calcium}')
 
         # calcium = quote(calcium, safe='')
 
