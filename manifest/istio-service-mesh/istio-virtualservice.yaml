@@ -13,7 +13,7 @@ spec:
             prefix: /django
       route:
         - destination:
-            host: django-service.default.svc.cluster.local
+            host: django-service.app.svc.cluster.local
             port:
               number: 8000
       corsPolicy:
@@ -33,7 +33,7 @@ spec:
             prefix: /angular
       route:
         - destination:
-            host: angular-service.default.svc.cluster.local
+            host: angular-service.app.svc.cluster.local
             port:
               number: 4200
       corsPolicy:
