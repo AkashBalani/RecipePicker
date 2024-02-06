@@ -19,10 +19,24 @@ class IngredientListCreateView(generics.ListCreateAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
 
+    def options(self, request, *args, **kwargs):
+        response = super().options(request, *args, **kwargs)
+        response['Access-Control-Allow-Origin'] = 'http://localhost:4200'
+        response['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response
+
 
 class RecipeListCreateView(generics.ListCreateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+
+    def options(self, request, *args, **kwargs):
+        response = super().options(request, *args, **kwargs)
+        response['Access-Control-Allow-Origin'] = 'http://localhost:4200'
+        response['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response
 
 
 def health_check(request):
