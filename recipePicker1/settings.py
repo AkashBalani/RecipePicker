@@ -55,9 +55,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'recipePicker1.middleware.cors_middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -86,9 +87,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'recipePicker1.wsgi.application'
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 # CSRF_USE_SESSIONS = True
 
@@ -97,9 +98,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 #     "http://localhost:80",
 # ]
 
-CORS_ALLOW_METHODS = ['*']
+CORS_ALLOW_METHODS = ['POST', 'GET', 'OPTIONS', 'PUT',
+                      'DELETE', 'PATCH', 'HEAD', 'TRACE', 'CONNECT']
 
-CORS_ALLOW_HEADERS = ['*']
+CORS_ALLOW_HEADERS = ['Content-Type', 'X-CSRFToken', 'Authorization',
+                      'X-Requested-With', 'X-CSRFTOKEN', 'X-HTTP-Method-Override']
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
