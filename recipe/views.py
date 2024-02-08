@@ -76,29 +76,32 @@ def find_recipes(request):
         if not ingredients:
             return JsonResponse({'error': 'Please provide at least one ingredient'}, status=400)
 
-        endpoint = 'https://api.edamam.com/search'
+        endpoint = 'https://api.edamam.com/api/recipes/v2'
 
         if excluded and dietLabels:
             params = {
+                'type': 'public',
                 'q': ','.join(ingredients),
-                'excluded': ','.join(excluded),
                 'diet': ','.join(dietLabels),
                 'app_id': settings.APP_ID,
                 'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
             }
 
         if excluded:
             params = {
+                'type': 'public',
                 'q': ','.join(ingredients),
-                'excluded': ','.join(excluded),
                 # 'CA': calcium if isinstance(calcium, str) else ','.join(calcium),
                 'app_id': settings.APP_ID,
                 'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
             }
             print(params)
 
         if dietLabels:
             params = {
+                'type': 'public',
                 'q': ','.join(ingredients),
                 'diet': ','.join(dietLabels),
                 'app_id': settings.APP_ID,
@@ -107,6 +110,7 @@ def find_recipes(request):
 
         else:
             params = {
+                'type': 'public',
                 'q': ','.join(ingredients),
                 'app_id': settings.APP_ID,
                 'app_key': settings.APP_KEY,
