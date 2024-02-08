@@ -60,6 +60,8 @@ def find_recipes(request):
 
         calcium = request.GET.get('calcium')
 
+        dietLabels = request.GET.getlist('dietLabels')
+
         # print(f'Raw calcium value: {calcium}')
 
         if calcium:
@@ -76,15 +78,32 @@ def find_recipes(request):
 
         endpoint = 'https://api.edamam.com/search'
 
-        if excluded and calcium:
+        if excluded and dietLabels:
             params = {
                 'q': ','.join(ingredients),
                 'excluded': ','.join(excluded),
-                'CA': calcium if isinstance(calcium, str) else ','.join(calcium),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+            }
+
+        if excluded:
+            params = {
+                'q': ','.join(ingredients),
+                'excluded': ','.join(excluded),
+                # 'CA': calcium if isinstance(calcium, str) else ','.join(calcium),
                 'app_id': settings.APP_ID,
                 'app_key': settings.APP_KEY,
             }
             print(params)
+
+        if dietLabels:
+            params = {
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+            }
 
         else:
             params = {
