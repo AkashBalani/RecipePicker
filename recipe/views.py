@@ -56,7 +56,7 @@ def find_recipes(request):
 
         ingredients = request.GET.getlist('ingredient')
 
-        excluded = request.GET.getlist('exclude')
+        excluded = request.GET.getlist('excluded')
 
         calcium = request.GET.get('calcium')
 
