@@ -62,6 +62,8 @@ def find_recipes(request):
 
         dietLabels = request.GET.getlist('dietLabels')
 
+        mealType = request.GET.getlist('mealType')
+
         # print(f'Raw calcium value: {calcium}')
 
         if calcium:
@@ -78,6 +80,17 @@ def find_recipes(request):
 
         endpoint = 'https://api.edamam.com/api/recipes/v2'
 
+        if excluded and dietLabels and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'mealType': ','.join(mealType),
+            }
+
         if excluded and dietLabels:
             params = {
                 'type': 'public',
@@ -86,6 +99,16 @@ def find_recipes(request):
                 'app_id': settings.APP_ID,
                 'app_key': settings.APP_KEY,
                 'excluded': ','.join(excluded),
+            }
+
+        if excluded and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'mealType': ','.join(mealType),
             }
 
         if excluded:
@@ -106,6 +129,15 @@ def find_recipes(request):
                 'diet': ','.join(dietLabels),
                 'app_id': settings.APP_ID,
                 'app_key': settings.APP_KEY,
+            }
+
+        if mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'mealType': ','.join(mealType),
             }
 
         else:
