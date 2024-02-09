@@ -64,21 +64,108 @@ def find_recipes(request):
 
         mealType = request.GET.getlist('mealType')
 
-        # print(f'Raw calcium value: {calcium}')
-
-        if calcium:
-            calcium = calcium.strip()  # Remove leading and trailing whitespaces
-
-        # print(f'Before encoding: {calcium}')
-
-        # calcium = quote(calcium, safe='')
-
-        # print(f'After encoding: {calcium}')
+        healthLabels = request.GET.getlist('healthLabels')
 
         if not ingredients:
             return JsonResponse({'error': 'Please provide at least one ingredient'}, status=400)
 
         endpoint = 'https://api.edamam.com/api/recipes/v2'
+
+        if ingredients and excluded and dietLabels and mealType and healthLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'mealType': ','.join(mealType),
+                'health': ','.join(healthLabels),
+            }
+
+        if ingredients and excluded and dietLabels and healthLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'health': ','.join(healthLabels),
+            }
+
+        if ingredients and excluded and healthLabels and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'mealType': ','.join(mealType),
+                'health': ','.join(healthLabels),
+            }
+
+        if ingredients and healthLabels and dietLabels and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'mealType': ','.join(mealType),
+                'health': ','.join(healthLabels),
+            }
+
+        if ingredients and excluded and dietLabels and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'mealType': ','.join(mealType),
+            }
+
+        if ingredients and dietLabels and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'mealType': ','.join(mealType),
+            }
+
+        if ingredients and excluded and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'mealType': ','.join(mealType),
+            }
+
+        if ingredients and dietLabels and healthLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'health': ','.join(healthLabels),
+            }
+
+        if ingredients and healthLabels and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'mealType': ','.join(mealType),
+                'health': ','.join(healthLabels),
+            }
 
         if excluded and dietLabels and mealType:
             params = {
@@ -89,6 +176,125 @@ def find_recipes(request):
                 'app_key': settings.APP_KEY,
                 'excluded': ','.join(excluded),
                 'mealType': ','.join(mealType),
+            }
+
+        if excluded and dietLabels and healthLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'health': ','.join(healthLabels),
+            }
+
+        if excluded and healthLabels and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'mealType': ','.join(mealType),
+                'health': ','.join(healthLabels),
+            }
+
+        if ingredients and excluded and dietLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+            }
+
+        if ingredients and excluded and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'mealType': ','.join(mealType),
+            }
+
+        if ingredients and excluded and healthLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'health': ','.join(healthLabels),
+            }
+
+        if ingredients and dietLabels and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'mealType': ','.join(mealType),
+            }
+
+        if ingredients and dietLabels and healthLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'health': ','.join(healthLabels),
+            }
+
+        if ingredients and mealType and healthLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'mealType': ','.join(mealType),
+                'health': ','.join(healthLabels),
+            }
+
+        if ingredients and excluded:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                # 'CA': calcium if isinstance(calcium, str) else ','.join(calcium),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+            }
+
+        if ingredients and dietLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'diet': ','.join(dietLabels),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+            }
+
+        if ingredients and mealType:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'mealType': ','.join(mealType),
+            }
+
+        if ingredients and healthLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'health': ','.join(healthLabels),
             }
 
         if excluded and dietLabels:
@@ -109,6 +315,16 @@ def find_recipes(request):
                 'app_key': settings.APP_KEY,
                 'excluded': ','.join(excluded),
                 'mealType': ','.join(mealType),
+            }
+
+        if excluded and healthLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'excluded': ','.join(excluded),
+                'health': ','.join(healthLabels),
             }
 
         if excluded:
@@ -138,6 +354,24 @@ def find_recipes(request):
                 'app_id': settings.APP_ID,
                 'app_key': settings.APP_KEY,
                 'mealType': ','.join(mealType),
+            }
+
+        if healthLabels:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'health': ','.join(healthLabels),
+            }
+
+        if calcium:
+            params = {
+                'type': 'public',
+                'q': ','.join(ingredients),
+                'app_id': settings.APP_ID,
+                'app_key': settings.APP_KEY,
+                'CA': calcium,
             }
 
         else:
