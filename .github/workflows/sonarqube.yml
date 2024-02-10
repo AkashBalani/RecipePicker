@@ -21,13 +21,6 @@ jobs:
       #       java-version: "11"
       #       distribution: "adopt"
 
-      #   - name: Cache SonarQube packages
-      #     uses: actions/cache@v2
-      #     with:
-      #       path: ~/.sonar/cache
-      #       key: ${{ runner.os }}-sonar
-      #       restore-keys: ${{ runner.os }}-sonar
-
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
