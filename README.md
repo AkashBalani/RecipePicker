@@ -33,3 +33,5 @@ The following ports are used in this application
 - **Port 3100**: This port is reserved for Loki service.
 
 - **Port 8099 and 8088**: These ports are reserved for splunk service.
+
+- **Port 9000**: This port is reserved for Sonarqube service.
