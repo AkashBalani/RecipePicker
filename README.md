@@ -35,3 +35,5 @@ The following ports are used in this application
 - **Port 8099 and 8088**: These ports are reserved for splunk service.
 
 - **Port 9000**: This port is reserved for Sonarqube service.
+
+- **Port 9092 and Port 9093**: This port is reserved for Kafka service.
