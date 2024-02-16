@@ -52,3 +52,4 @@ spec:
           name: kafka-service
           ports:
             - containerPort: 9092
+            - containerPort: 9093

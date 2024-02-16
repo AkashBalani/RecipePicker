@@ -11,6 +11,18 @@ from urllib.parse import quote
 from prometheus_client import Counter, generate_latest, REGISTRY
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_protect
+from kafka import KafkaConsumer
+import json
+
+# # Initialize Kafka Consumer
+# consumer = KafkaConsumer('test',
+#                          bootstrap_servers=['localhost:9093'],
+#                          auto_offset_reset='earliest',
+#                          enable_auto_commit=True,
+#                          value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+
+# for message in consumer:
+#     print("Received message:", message.value)
 
 logger = logging.getLogger(__name__)
 
