@@ -21,10 +21,10 @@ spec:
               protocol: TCP
               name: zipkin-thrift
             - containerPort: 14267
-              protocol: HTTP
+              protocol: TCP
               name: config-http
             - containerPort: 14268
-              protocol: HTTP
+              protocol: TCP
               name: jaeger-http
           env:
             - name: SPAN_STORAGE_TYPE
