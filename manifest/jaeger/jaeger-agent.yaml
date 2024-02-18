@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: jaeger-agent
+  namespace: jaeger
+spec:
+  selector:
+    matchLabels:
+      app: jaeger-agent
+  template:
+    metadata:
+      labels:
+        app: jaeger-agent
+    spec:
+      containers:
+        - name: jaeger-agent
+          image: jaegertracing/jaeger-agent:latest
+          ports:
+            - containerPort: 5775
+              protocol: UDP
+              name: config-rest
+            - containerPort: 6831
+              protocol: UDP
+              name: jaeger-thrift
+            - containerPort: 6832
+              protocol: UDP
+              name: jaeger-compact
+            - containerPort: 5778
+              protocol: TCP
+              name: admin-http
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
