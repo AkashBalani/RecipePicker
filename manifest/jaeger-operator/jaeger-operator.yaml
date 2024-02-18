@@ -1,0 +1,22 @@
+# Source: https://github.com/jaegertracing/jaeger-operator/releases/download/v1.54.0/jaeger-operator.yaml
+# Adjust the version number if needed
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger-operator
+  namespace: observability
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger-operator
+  template:
+    metadata:
+      labels:
+        app: jaeger-operator
+    spec:
+      serviceAccountName: jaeger-operator
+      containers:
+        - name: jaeger-operator
+          image: jaegertracing/jaeger-operator:1.54.0
+          imagePullPolicy: IfNotPresent
