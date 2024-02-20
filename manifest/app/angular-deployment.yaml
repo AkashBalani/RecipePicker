@@ -20,6 +20,27 @@ spec:
           image: akashbalani/recipefront:latest
           ports:
             - containerPort: 4200
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: angular-secret
+                  key: accesskeyid
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: angular-secret
+                  key: secretaccesskey
+            - name: AWS_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: angular-secret
+                  key: awsregion
+            - name: QueueUrl
+              valueFrom:
+                secretKeyRef:
+                  name: angular-secret
+                  key: queueurl
         # - name: envoy-sidecar
         #   image: envoyproxy/envoy:v1.19.0
         #   args:
