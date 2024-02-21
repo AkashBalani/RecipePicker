@@ -2,8 +2,9 @@ from django.shortcuts import render
 from .models import Recipe, Ingredient
 from rest_framework import generics
 from .serializers import IngredientSerializer, RecipeSerializer
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, JsonResponse
 import requests
+import boto3
 import logging
 from django.views.decorators.http import require_GET
 from django.conf import settings
@@ -26,6 +27,9 @@ import json
 
 logger = logging.getLogger(__name__)
 
+# Initialize SQS Client
+sqs_client = boto3.client('sqs', region_name=settings.AWS_REGION)
+
 
 class IngredientListCreateView(generics.ListCreateAPIView):
     queryset = Ingredient.objects.all()
@@ -37,6 +41,24 @@ class IngredientListCreateView(generics.ListCreateAPIView):
         response['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
         response['Access-Control-Allow-Headers'] = 'Content-Type'
         return response
+
+    def post(self, request, *args, **kwargs):
+        # Assuming the SQS queue URL is stored in settings.py as SQS_QUEUE_URL
+        sqs_queue_url = settings.SQS_QUEUE_URL
+
+        # Assuming the request data is a list of ingredients
+        ingredients = request.data.get('ingredients', [])
+        if not ingredients:
+            return HttpResponseBadRequest("No ingredients provided in the request.")
+
+        # Send each ingredient to SQS queue
+        for ingredient in ingredients:
+            sqs_client.send_message(
+                QueueUrl=sqs_queue_url,
+                MessageBody=json.dumps(ingredient)
+            )
+
+        return JsonResponse({'message': 'Ingredients sent to SQS successfully.'}, status=201)
 
 
 class RecipeListCreateView(generics.ListCreateAPIView):
