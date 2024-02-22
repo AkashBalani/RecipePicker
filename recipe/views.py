@@ -44,7 +44,7 @@ class IngredientListCreateView(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         # Assuming the SQS queue URL is stored in settings.py as SQS_QUEUE_URL
-        sqs_queue_url = settings.SQS_QUEUE_URL
+        sqs_queue_url = settings.QUEUE_URL
 
         # Assuming the request data is a list of ingredients
         ingredients = request.data.get('ingredients', [])

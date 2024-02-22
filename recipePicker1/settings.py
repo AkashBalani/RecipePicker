@@ -23,6 +23,7 @@ APP_ID = os.getenv('APP_ID'),
 APP_KEY = os.getenv('APP_KEY'),
 # APP_KEY = config('APP_KEY'),
 AWS_REGION = os.getenv('AWS_REGION'),
+QUEUE_URL = os.getenv('QUEUE_URL'),
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
