@@ -37,6 +37,6 @@ staticfiles/
 **/lib/**
 # Environment variables
 # Uncomment this when making the repo public
-**/.env
+recipePicker1/.env
 
 **/db/**
