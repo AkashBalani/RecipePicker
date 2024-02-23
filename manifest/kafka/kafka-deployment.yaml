@@ -7,10 +7,14 @@ metadata:
   namespace: app
 spec:
   ports:
-    - name: kafka-port
-      port: 9093
+    - name: kafka-port-internal
+      port: 9092
       protocol: TCP
       targetPort: 9092
+    - name: kafka-port-external
+      port: 9093
+      protocol: TCP
+      targetPort: 9093
   selector:
     app: kafka-service
   clusterIP: None
