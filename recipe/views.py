@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from .models import Recipe, Ingredient
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .serializers import IngredientSerializer, RecipeSerializer
 from django.http import HttpResponseBadRequest, JsonResponse
 import requests
@@ -14,6 +16,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_protect
 from kafka import KafkaConsumer
 import json
+import datetime
 
 # # Initialize Kafka Consumer
 # consumer = KafkaConsumer('test',
@@ -26,9 +29,67 @@ import json
 #     print("Received message:", message.value)
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
 
+print("AWS_REGION:", settings.AWS_REGION)
+print("QueueUrl:", settings.QUEUE_URL)
 # Initialize SQS Client
-sqs_client = boto3.client('sqs', region_name=settings.AWS_REGION)
+sqs_client = boto3.client('sqs',
+                          region_name='us-east-1',
+                          aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                          aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
+                          )
+
+
+class SQSPollingView(APIView):
+    def get(self, request, *args, **kwargs):
+        sqs_queue_url = settings.QUEUE_URL
+
+        # Receive messages from the queue
+        response = sqs_client.receive_message(
+            QueueUrl=sqs_queue_url,
+            MaxNumberOfMessages=1,  # Change this value as needed
+            WaitTimeSeconds=20  # Change this value as needed
+        )
+
+        messages = response.get('Messages', [])
+        if not messages:
+            return Response({'message': 'No messages in the queue.'}, status=204)
+
+        # Process received messages
+        for message in messages:
+            ingredient_data = json.loads(message['Body'])
+            # Process the ingredient_data as needed, for example, saving it to the database
+            date_str = ingredient_data.get('date_of_expiry', None)
+            if date_str:
+                try:
+                    date_obj = datetime.datetime.strptime(
+                        date_str, '%m-%d-%Y').date()
+                    ingredient_data['date_of_expiry'] = date_obj
+                except ValueError:
+                    logger.error(
+                        f"Invalid date format: {date_str}. Skipping message.")
+                    continue
+            else:
+                logger.error(
+                    "Date field not found in message. Skipping message.")
+                continue
+
+            Ingredient.objects.create(**ingredient_data)
+            # Delete the message from the queue
+            sqs_client.delete_message(
+                QueueUrl=sqs_queue_url,
+                ReceiptHandle=message['ReceiptHandle']
+            )
+            logger.info("Processed and deleted message from SQS queue.")
+
+        return Response({'message': 'Messages processed successfully.'}, status=200)
 
 
 class IngredientListCreateView(generics.ListCreateAPIView):
@@ -37,7 +98,7 @@ class IngredientListCreateView(generics.ListCreateAPIView):
 
     def options(self, request, *args, **kwargs):
         response = super().options(request, *args, **kwargs)
-        response['Access-Control-Allow-Origin'] = 'http://localhost:4200'
+        response['Access-Control-Allow-Origin'] = '*'
         response['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
         response['Access-Control-Allow-Headers'] = 'Content-Type'
         return response
@@ -49,7 +110,7 @@ class IngredientListCreateView(generics.ListCreateAPIView):
         # Assuming the request data is a list of ingredients
         ingredients = request.data.get('ingredients', [])
         if not ingredients:
-            return HttpResponseBadRequest("No ingredients provided in the request.")
+            return Response({"error": "No ingredients provided in the request."}, status=400)
 
         # Send each ingredient to SQS queue
         for ingredient in ingredients:
@@ -57,7 +118,7 @@ class IngredientListCreateView(generics.ListCreateAPIView):
                 QueueUrl=sqs_queue_url,
                 MessageBody=json.dumps(ingredient)
             )
-
+        logger.info("Ingredients sent to SQS successfully.")
         return JsonResponse({'message': 'Ingredients sent to SQS successfully.'}, status=201)
 
 
