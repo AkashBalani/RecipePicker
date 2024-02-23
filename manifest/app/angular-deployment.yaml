@@ -20,6 +20,7 @@ spec:
           image: akashbalani/recipefront:latest
           ports:
             - containerPort: 4200
+            - containerPort: 3000
           env:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
@@ -58,8 +59,13 @@ spec:
   selector:
     app: angular
   ports:
-    - protocol: TCP
+    - name: angular
+      protocol: TCP
       port: 4200
       targetPort: 4200
+    - name: express
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
       # nodePort: 30001
   type: LoadBalancer
