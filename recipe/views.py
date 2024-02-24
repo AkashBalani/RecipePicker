@@ -17,6 +17,7 @@ from django.views.decorators.csrf import csrf_protect
 from kafka import KafkaConsumer
 import json
 import datetime
+import pymysql
 
 # # Initialize Kafka Consumer
 # consumer = KafkaConsumer('test',
@@ -62,32 +63,50 @@ class SQSPollingView(APIView):
         if not messages:
             return Response({'message': 'No messages in the queue.'}, status=204)
 
-        # Process received messages
-        for message in messages:
-            ingredient_data = json.loads(message['Body'])
-            # Process the ingredient_data as needed, for example, saving it to the database
-            date_str = ingredient_data.get('date_of_expiry', None)
-            if date_str:
-                try:
-                    date_obj = datetime.datetime.strptime(
-                        date_str, '%m-%d-%Y').date()
-                    ingredient_data['date_of_expiry'] = date_obj
-                except ValueError:
-                    logger.error(
-                        f"Invalid date format: {date_str}. Skipping message.")
-                    continue
-            else:
-                logger.error(
-                    "Date field not found in message. Skipping message.")
-                continue
+        # Connect to MySQL
+        connection = pymysql.connect(host=settings.DATABASES['default']['HOST'],
+                                     user=settings.DATABASES['default']['USER'],
+                                     password=settings.DATABASES['default']['PASSWORD'],
+                                     database=settings.DATABASES['default']['NAME'])
 
-            Ingredient.objects.create(**ingredient_data)
-            # Delete the message from the queue
-            sqs_client.delete_message(
-                QueueUrl=sqs_queue_url,
-                ReceiptHandle=message['ReceiptHandle']
-            )
-            logger.info("Processed and deleted message from SQS queue.")
+        try:
+            with connection.cursor() as cursor:
+                # Process received messages
+                for message in messages:
+                    ingredient_data = json.loads(message['Body'])
+                    # Process the ingredient_data as needed, for example, saving it to the database
+                    date_str = ingredient_data.get('date_of_expiry', None)
+                    if date_str:
+                        try:
+                            date_obj = datetime.datetime.strptime(
+                                date_str, '%m-%d-%Y').date()
+                            ingredient_data['date_of_expiry'] = date_obj
+                        except ValueError:
+                            logger.error(
+                                f"Invalid date format: {date_str}. Skipping message.")
+                            continue
+                    else:
+                        logger.error(
+                            "Date field not found in message. Skipping message.")
+                        continue
+
+                    # Insert data into MySQL
+                    sql = "INSERT INTO recipe_ingredient (name, quantity, date_of_expiry) VALUES (%s, %s, %s)"
+                    cursor.execute(
+                        sql, (ingredient_data['name'], ingredient_data['quantity'], ingredient_data['date_of_expiry']))
+                    connection.commit()
+                    logger.info("Inserted data into MySQL.")
+
+                    # Delete the message from the queue
+                    sqs_client.delete_message(
+                        QueueUrl=sqs_queue_url,
+                        ReceiptHandle=message['ReceiptHandle']
+                    )
+                    logger.info(
+                        "Processed and deleted message from SQS queue.")
+
+        finally:
+            connection.close()
 
         return Response({'message': 'Messages processed successfully.'}, status=200)
 
