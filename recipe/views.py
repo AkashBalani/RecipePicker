@@ -167,342 +167,45 @@ def find_recipes(request):
     logger = logging.getLogger(__name__)
 
     try:
-
         ingredients = request.GET.getlist('ingredient')
-
         excluded = request.GET.getlist('excluded')
-
+        dietLabels = request.GET.getlist('dietLabels')
+        mealType = request.GET.getlist('mealType')
+        healthLabels = request.GET.getlist('healthLabels')
         calcium = request.GET.get('calcium')
 
-        dietLabels = request.GET.getlist('dietLabels')
+        params = {
+            'type': 'public',
+            'q': ','.join(ingredients),
+            'app_id': settings.APP_ID,
+            'app_key': settings.APP_KEY,
+        }
 
-        mealType = request.GET.getlist('mealType')
-
-        healthLabels = request.GET.getlist('healthLabels')
-
-        if not ingredients:
-            return JsonResponse({'error': 'Please provide at least one ingredient'}, status=400)
-
-        endpoint = 'https://api.edamam.com/api/recipes/v2'
-
-        if ingredients and excluded and dietLabels and mealType and healthLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'mealType': ','.join(mealType),
-                'health': ','.join(healthLabels),
-            }
-
-        if ingredients and excluded and dietLabels and healthLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'health': ','.join(healthLabels),
-            }
-
-        if ingredients and excluded and healthLabels and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'mealType': ','.join(mealType),
-                'health': ','.join(healthLabels),
-            }
-
-        if ingredients and healthLabels and dietLabels and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'mealType': ','.join(mealType),
-                'health': ','.join(healthLabels),
-            }
-
-        if ingredients and excluded and dietLabels and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'mealType': ','.join(mealType),
-            }
-
-        if ingredients and dietLabels and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'mealType': ','.join(mealType),
-            }
-
-        if ingredients and excluded and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'mealType': ','.join(mealType),
-            }
-
-        if ingredients and dietLabels and healthLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'health': ','.join(healthLabels),
-            }
-
-        if ingredients and healthLabels and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'mealType': ','.join(mealType),
-                'health': ','.join(healthLabels),
-            }
-
-        if excluded and dietLabels and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'mealType': ','.join(mealType),
-            }
-
-        if excluded and dietLabels and healthLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'health': ','.join(healthLabels),
-            }
-
-        if excluded and healthLabels and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'mealType': ','.join(mealType),
-                'health': ','.join(healthLabels),
-            }
-
-        if ingredients and excluded and dietLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-            }
-
-        if ingredients and excluded and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'mealType': ','.join(mealType),
-            }
-
-        if ingredients and excluded and healthLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'health': ','.join(healthLabels),
-            }
-
-        if ingredients and dietLabels and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'mealType': ','.join(mealType),
-            }
-
-        if ingredients and dietLabels and healthLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'health': ','.join(healthLabels),
-            }
-
-        if ingredients and mealType and healthLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'mealType': ','.join(mealType),
-                'health': ','.join(healthLabels),
-            }
-
-        if ingredients and excluded:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                # 'CA': calcium if isinstance(calcium, str) else ','.join(calcium),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-            }
-
-        if ingredients and dietLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-            }
-
-        if ingredients and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'mealType': ','.join(mealType),
-            }
-
-        if ingredients and healthLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'health': ','.join(healthLabels),
-            }
-
-        if excluded and dietLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-            }
-
-        if excluded and mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'mealType': ','.join(mealType),
-            }
-
-        if excluded and healthLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-                'health': ','.join(healthLabels),
-            }
+        if ingredients:
+            params['q'] = ','.join(ingredients)
 
         if excluded:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                # 'CA': calcium if isinstance(calcium, str) else ','.join(calcium),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'excluded': ','.join(excluded),
-            }
-            print(params)
+            params['excluded'] = ','.join(excluded)
 
         if dietLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'diet': ','.join(dietLabels),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-            }
+            params['diet'] = ','.join(dietLabels)
 
         if mealType:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'mealType': ','.join(mealType),
-            }
+            params['mealType'] = ','.join(mealType)
 
         if healthLabels:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'health': ','.join(healthLabels),
-            }
+            params['health'] = ','.join(healthLabels)
 
         if calcium:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-                'CA': calcium,
-            }
+            params['CA'] = calcium
 
-        else:
-            params = {
-                'type': 'public',
-                'q': ','.join(ingredients),
-                'app_id': settings.APP_ID,
-                'app_key': settings.APP_KEY,
-            }
-
+        endpoint = 'https://api.edamam.com/api/recipes/v2'
         response = requests.get(endpoint, params=params)
-
         data = response.json()
         return JsonResponse(data, safe=False)
+
     except Exception as e:
         logger.exception("Error in find_recipes view: %s", str(e))
-
         return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
 
 
