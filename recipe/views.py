@@ -172,6 +172,7 @@ def find_recipes(request):
         dietLabels = request.GET.getlist('dietLabels')
         mealType = request.GET.getlist('mealType')
         healthLabels = request.GET.getlist('healthLabels')
+        cuisineType = request.GET.getlist('cuisineType')
         calcium = request.GET.get('calcium')
 
         params = {
@@ -196,8 +197,8 @@ def find_recipes(request):
         if healthLabels:
             params['health'] = ','.join(healthLabels)
 
-        if mealType:
-            params['mealType'] = ','.join(mealType)
+        if cuisineType:
+            params['cuisineType'] = ','.join(cuisineType)
 
         if calcium:
             params['CA'] = calcium
