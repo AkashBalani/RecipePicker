@@ -196,6 +196,9 @@ def find_recipes(request):
         if healthLabels:
             params['health'] = ','.join(healthLabels)
 
+        if mealType:
+            params['mealType'] = ','.join(mealType)
+
         if calcium:
             params['CA'] = calcium
 
