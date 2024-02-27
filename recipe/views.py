@@ -5,6 +5,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import IngredientSerializer, RecipeSerializer
 from django.http import HttpResponseBadRequest, JsonResponse
+# from django_grpc_framework.views import GrpcGenericServiceMixin
+# from .python_gen.example_pb2 import MessageResponse
+# from .python_gen.example_pb2_grpc import add_ExampleServiceServicer_to_server
 import requests
 import boto3
 import logging
@@ -46,6 +49,17 @@ sqs_client = boto3.client('sqs',
                           aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
                           aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
                           )
+
+
+# class ExampleService(GrpcGenericServiceMixin):
+#     def SendMessage(self, request, context):
+#         message = request.message
+#         response = "Hello, " + message
+#         return MessageResponse(response=response)
+
+#     def grpc_handler(server):
+#         add_ExampleServiceServicer_to_server(
+#             ExampleService.as_servicer(), server)
 
 
 class SQSPollingView(APIView):
