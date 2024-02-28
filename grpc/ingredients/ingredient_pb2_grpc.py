@@ -34,7 +34,7 @@ class IngredientServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_IngredientServiceServicer_to_server(servicer, server):
+def _IngredientServiceServicer_to_serveradd(servicer, server):
     rpc_method_handlers = {
             'AddIngredient': grpc.unary_unary_rpc_method_handler(
                     servicer.AddIngredient,

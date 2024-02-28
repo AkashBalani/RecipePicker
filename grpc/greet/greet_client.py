@@ -1,7 +1,8 @@
-import grpc.greet.greet_pb2_grpc as greet_pb2_grpc
-import grpc.greet.greet_pb2 as greet_pb2
+import greet_pb2_grpc as greet_pb2_grpc
+import greet_pb2 as greet_pb2
 import time
 import grpc
+
 
 def get_client_stream_requests():
     while True:
@@ -10,9 +11,10 @@ def get_client_stream_requests():
         if name == "":
             break
 
-        hello_request = greet_pb2.HelloRequest(greeting = "Hello", name = name)
+        hello_request = greet_pb2.HelloRequest(greeting="Hello", name=name)
         yield hello_request
         time.sleep(1)
+
 
 def run():
     with grpc.insecure_channel('localhost:50051') as channel:
@@ -24,19 +26,22 @@ def run():
         rpc_call = input("Which rpc would you like to make: ")
 
         if rpc_call == "1":
-            hello_request = greet_pb2.HelloRequest(greeting = "Bonjour", name = "YouTube")
+            hello_request = greet_pb2.HelloRequest(
+                greeting="Bonjour", name="YouTube")
             hello_reply = stub.SayHello(hello_request)
             print("SayHello Response Received:")
             print(hello_reply)
         elif rpc_call == "2":
-            hello_request = greet_pb2.HelloRequest(greeting = "Bonjour", name = "YouTube")
+            hello_request = greet_pb2.HelloRequest(
+                greeting="Bonjour", name="YouTube")
             hello_replies = stub.ParrotSaysHello(hello_request)
 
             for hello_reply in hello_replies:
                 print("ParrotSaysHello Response Received:")
                 print(hello_reply)
         elif rpc_call == "3":
-            delayed_reply = stub.ChattyClientSaysHello(get_client_stream_requests())
+            delayed_reply = stub.ChattyClientSaysHello(
+                get_client_stream_requests())
 
             print("ChattyClientSaysHello Response Received:")
             print(delayed_reply)
@@ -46,6 +51,7 @@ def run():
             for response in responses:
                 print("InteractingHello Response Received: ")
                 print(response)
+
 
 if __name__ == "__main__":
     run()
