@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from .models import Recipe, Ingredient
-from rest_framework import generics
+from rest_framework import generics as rest_generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django_grpc_framework import mixins
+from django_grpc_framework import generics as grpc_generics
 from .serializers import IngredientSerializer, RecipeSerializer
 from django.http import HttpResponseBadRequest, JsonResponse
 # from django_grpc_framework.views import GrpcGenericServiceMixin
@@ -21,6 +23,7 @@ from kafka import KafkaConsumer
 import json
 import datetime
 import pymysql
+from .grpc.ingredients.ingredient_pb2 import IngredientRequest, IngredientReply
 
 # # Initialize Kafka Consumer
 # consumer = KafkaConsumer('test',
@@ -125,7 +128,7 @@ class SQSPollingView(APIView):
         return Response({'message': 'Messages processed successfully.'}, status=200)
 
 
-class IngredientListCreateView(generics.ListCreateAPIView):
+class IngredientListCreateView(rest_generics.ListCreateAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
 
@@ -155,7 +158,7 @@ class IngredientListCreateView(generics.ListCreateAPIView):
         return JsonResponse({'message': 'Ingredients sent to SQS successfully.'}, status=201)
 
 
-class RecipeListCreateView(generics.ListCreateAPIView):
+class RecipeListCreateView(rest_generics.ListCreateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
 
@@ -227,7 +230,7 @@ def find_recipes(request):
         return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
 
 
-requests_counter = Counter('django_http_requests_total', 'Total HTTP Requests')
+# requests_counter = Counter('django_http_requests_total', 'Total HTTP Requests')
 
 
 def some_view(request):
@@ -242,3 +245,15 @@ def metrics_view(request):
     response = HttpResponse(generate_latest(REGISTRY))
     response['Content-Type'] = 'text/plain'
     return response
+
+
+class IngredientService(grpc_generics.GenericService):
+    def AddIngredient(self, request, context):
+        name = request.name
+        quantity = request.quantity
+        date_of_expiry = request.date_of_expiry
+        print("Received Ingredient:")
+        print("Name:", name)
+        print("Quantity:", quantity)
+        print("Date of Expiry:", date_of_expiry)
+        return IngredientReply(message="Ingredient received successfully.")

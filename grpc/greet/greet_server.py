@@ -2,8 +2,8 @@ from concurrent import futures
 import time
 
 import grpc
-import greet_pb2
-import greet_pb2_grpc
+import grpc.greet.greet_pb2 as greet_pb2
+import grpc.greet.greet_pb2_grpc as greet_pb2_grpc
 
 class GreeterServicer(greet_pb2_grpc.GreeterServicer):
     def SayHello(self, request, context):

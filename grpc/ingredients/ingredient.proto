@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package ingredient;
+
+// Ingredient service definition.
+service IngredientService {
+  // Unary
+  rpc AddIngredient (IngredientRequest) returns (IngredientReply);
+}
+
+// The request message for adding an ingredient.
+message IngredientRequest {
+  string name = 1;
+  double quantity = 2;
+  string date_of_expiry = 3;
+}
+
+// The response message for adding an ingredient.
+message IngredientReply {
+  string message = 1;
+}

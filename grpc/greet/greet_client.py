@@ -1,5 +1,5 @@
-import greet_pb2_grpc
-import greet_pb2
+import grpc.greet.greet_pb2_grpc as greet_pb2_grpc
+import grpc.greet.greet_pb2 as greet_pb2
 import time
 import grpc
 

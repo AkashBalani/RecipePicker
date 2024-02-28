@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import greet_pb2 as greet__pb2
+import grpc.greet.greet_pb2 as greet__pb2
 
 
 class GreeterStub(object):

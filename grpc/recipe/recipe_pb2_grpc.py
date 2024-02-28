@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import recipe_pb2 as recipe__pb2
+import grpc.recipe.recipe_pb2 as recipe__pb2
 
 
 class RecipeServiceStub(object):
