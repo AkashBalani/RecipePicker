@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package recipe;
+
+service RecipeService {
+    // Unary RPC for finding recipes
+    rpc FindRecipes (RecipeRequest) returns (RecipeResponse);
+}
+
+message RecipeRequest {
+    repeated string ingredients = 1;
+    repeated string excluded = 2;
+    repeated string diet_labels = 3;
+    repeated string meal_type = 4;
+    repeated string health_labels = 5;
+    repeated string cuisine_type = 6;
+    string calcium = 7;
+}
+
+message RecipeResponse {
+    repeated Recipe recipe = 1;
+
+    message Recipe {
+        string label = 1;
+        string image = 2;
+        repeated string ingredients = 3;
+        string url = 4;
+        string source = 5;
+    }
+}
