@@ -11,7 +11,7 @@ def run():
     # Accept user input for ingredient details
     name = input("Enter ingredient name: ")
     quantity = float(input("Enter quantity: "))
-    date_of_expiry = input("Enter expiry date (YYYY-MM-DD): ")
+    date_of_expiry = input("Enter expiry date (MM-DD-YYYY): ")
 
     # Create a request to add an ingredient
     ingredient_request = ingredient_pb2.IngredientRequest(

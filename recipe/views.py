@@ -223,7 +223,9 @@ def find_recipes(request):
         endpoint = 'https://api.edamam.com/api/recipes/v2'
         response = requests.get(endpoint, params=params)
         data = response.json()
-        return JsonResponse(data, safe=False)
+        response_data = json.dumps(data)
+        response = HttpResponse(response_data, content_type='application/json')
+        return response
 
     except Exception as e:
         logger.exception("Error in find_recipes view: %s", str(e))
@@ -233,11 +235,11 @@ def find_recipes(request):
 # requests_counter = Counter('django_http_requests_total', 'Total HTTP Requests')
 
 
-def some_view(request):
-    # Increment the counter metric on each request
-    requests_counter.inc()
-    # Your view logic here
-    return HttpResponse("Hello, world!")
+# def some_view(request):
+#     # Increment the counter metric on each request
+#     requests_counter.inc()
+#     # Your view logic here
+#     return HttpResponse("Hello, world!")
 
 
 def metrics_view(request):

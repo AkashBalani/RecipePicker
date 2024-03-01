@@ -12,5 +12,5 @@ urlpatterns = [
     path('health_check/', health_check, name='health_check'),
     path('ready_check/', ready_check, name='ready_check'),
     path('sqs/polling', SQSPollingView.as_view(), name='sqs-polling'),
-    path('grpc/', IngredientService.as_servicer(), name='grpc')
+    # path('grpc/', IngredientService.as_servicer(), name='grpc')
 ]
