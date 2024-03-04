@@ -5,14 +5,17 @@ import grpc
 import ingredient_pb2 as ingredient_pb2
 import ingredient_pb2_grpc as ingredient_pb2_grpc
 import requests
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class IngredientService(ingredient_pb2_grpc.IngredientServiceServicer):
     def AddIngredient(self, request, context):
-        print("AddIngredient Requst Made:")
-        print("Ingredient:", request.name)
-        print("Quantity:", request.quantity)
-        print("Expiry Date:", request.date_of_expiry)
+        logging.info("AddIngredient Request Made:")
+        logging.info("Ingredient: %s", request.name)
+        logging.info("Quantity: %s", request.quantity)
+        logging.info("Expiry Date: %s", request.date_of_expiry)
 
         data = {
             "name": request.name,
@@ -22,12 +25,15 @@ class IngredientService(ingredient_pb2_grpc.IngredientServiceServicer):
 
         try:
             response = requests.post(
-                'http://localhost:8000/django/api/ingredients', json=data)
+                'http://localhost:8000/django/api/grpc/', json=data)
             response.raise_for_status()  # Raise an exception for non-2xx responses
-            print("HTTP response status:", response.status_code)
-            print("HTTP response content:", response.text)
+            logging.info("HTTP response status: %s", response.status_code)
+            logging.info("HTTP response content: %s", response.text)
         except requests.exceptions.RequestException as e:
-            print("Error sending HTTP request:", e)
+            logging.error("Error sending HTTP request: %s", e)
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(str(e))
+            return ingredient_pb2.IngredientReply(message="Error adding ingredient")
 
         response = ingredient_pb2.IngredientReply()
         response.message = f"Ingredient {request.name} added successfully."

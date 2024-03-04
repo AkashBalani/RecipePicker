@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IngredientListCreateView, RecipeListCreateView, find_recipes, metrics_view, health_check, ready_check, SQSPollingView, IngredientService
+from .views import IngredientListCreateView, RecipeListCreateView, find_recipes, metrics_view, health_check, ready_check, SQSPollingView, IngredientService, IngredientListCreateView2
 
 app_name = 'recipes'
 
@@ -12,5 +12,6 @@ urlpatterns = [
     path('health_check/', health_check, name='health_check'),
     path('ready_check/', ready_check, name='ready_check'),
     path('sqs/polling', SQSPollingView.as_view(), name='sqs-polling'),
+    path('grpc/', IngredientListCreateView2.as_view(), name='grpc')
     # path('grpc/', IngredientService.as_servicer(), name='grpc')
 ]

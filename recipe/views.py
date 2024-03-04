@@ -158,6 +158,18 @@ class IngredientListCreateView(rest_generics.ListCreateAPIView):
         return JsonResponse({'message': 'Ingredients sent to SQS successfully.'}, status=201)
 
 
+class IngredientListCreateView2(rest_generics.ListCreateAPIView):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+
+    def options(self, request, *args, **kwargs):
+        response = super().options(request, *args, **kwargs)
+        response['Access-Control-Allow-Origin'] = '*'
+        response['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+        response['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response
+
+
 class RecipeListCreateView(rest_generics.ListCreateAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
