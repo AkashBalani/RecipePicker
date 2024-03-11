@@ -7,9 +7,6 @@ from django_grpc_framework import mixins
 from django_grpc_framework import generics as grpc_generics
 from .serializers import IngredientSerializer, RecipeSerializer
 from django.http import HttpResponseBadRequest, JsonResponse
-# from django_grpc_framework.views import GrpcGenericServiceMixin
-# from .python_gen.example_pb2 import MessageResponse
-# from .python_gen.example_pb2_grpc import add_ExampleServiceServicer_to_server
 import requests
 import boto3
 import logging
@@ -25,16 +22,6 @@ import datetime
 import pymysql
 from .grpc.ingredients.ingredient_pb2 import IngredientRequest, IngredientReply
 
-# # Initialize Kafka Consumer
-# consumer = KafkaConsumer('test',
-#                          bootstrap_servers=['127.0.0.1:9093'],
-#                          auto_offset_reset='earliest',
-#                          enable_auto_commit=True,
-#                          value_deserializer=lambda x: json.loads(x.decode('utf-8')))
-
-# for message in consumer:
-#     print("Received message:", message.value)
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
@@ -44,8 +31,6 @@ formatter = logging.Formatter(
 console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
-print("AWS_REGION:", settings.AWS_REGION)
-print("QueueUrl:", settings.QUEUE_URL)
 # Initialize SQS Client
 sqs_client = boto3.client('sqs',
                           region_name='us-east-1',
@@ -53,16 +38,9 @@ sqs_client = boto3.client('sqs',
                           aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
                           )
 
-
-# class ExampleService(GrpcGenericServiceMixin):
-#     def SendMessage(self, request, context):
-#         message = request.message
-#         response = "Hello, " + message
-#         return MessageResponse(response=response)
-
-#     def grpc_handler(server):
-#         add_ExampleServiceServicer_to_server(
-#             ExampleService.as_servicer(), server)
+# Requires QUEUE_URL to be set in settings.py
+# Requires DATABASES to be set in settings.py
+# Queues SQS messages and saves them to MySQL
 
 
 class SQSPollingView(APIView):
@@ -127,6 +105,9 @@ class SQSPollingView(APIView):
 
         return Response({'message': 'Messages processed successfully.'}, status=200)
 
+# Requires QUEUE_URL to be set in settings.py
+# Accepts POST requests with a list of ingredients and sends them to SQS
+
 
 class IngredientListCreateView(rest_generics.ListCreateAPIView):
     queryset = Ingredient.objects.all()
@@ -157,6 +138,8 @@ class IngredientListCreateView(rest_generics.ListCreateAPIView):
         logger.info("Ingredients sent to SQS successfully.")
         return JsonResponse({'message': 'Ingredients sent to SQS successfully.'}, status=201)
 
+# Accepts POST requests with a list of ingredients and saves them to MySQL
+
 
 class IngredientListCreateView2(rest_generics.ListCreateAPIView):
     queryset = Ingredient.objects.all()
@@ -181,6 +164,8 @@ class RecipeListCreateView(rest_generics.ListCreateAPIView):
         response['Access-Control-Allow-Headers'] = 'Content-Type'
         return response
 
+# Health and readiness checks
+
 
 def health_check(request):
     return HttpResponse("OK")
@@ -188,6 +173,8 @@ def health_check(request):
 
 def ready_check(request):
     return HttpResponse("OK")
+
+# Accepts GET requests with params and returns a list of recipes
 
 
 @csrf_protect
@@ -243,22 +230,15 @@ def find_recipes(request):
         logger.exception("Error in find_recipes view: %s", str(e))
         return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
 
-
-# requests_counter = Counter('django_http_requests_total', 'Total HTTP Requests')
-
-
-# def some_view(request):
-#     # Increment the counter metric on each request
-#     requests_counter.inc()
-#     # Your view logic here
-#     return HttpResponse("Hello, world!")
+# Expose the /metrics endpoint for Prometheus to scrape
 
 
 def metrics_view(request):
-    # Expose the /metrics endpoint for Prometheus to scrape
     response = HttpResponse(generate_latest(REGISTRY))
     response['Content-Type'] = 'text/plain'
     return response
+
+# Created a testing method for the gRPC server
 
 
 class IngredientService(grpc_generics.GenericService):
