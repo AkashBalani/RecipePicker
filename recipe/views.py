@@ -168,11 +168,11 @@ class RecipeListCreateView(rest_generics.ListCreateAPIView):
 
 
 def health_check(request):
-    return HttpResponse("OK")
+    return HttpResponse("Health Check - OK")
 
 
 def ready_check(request):
-    return HttpResponse("OK")
+    return HttpResponse("Readiness Check - OK")
 
 # Accepts GET requests with params and returns a list of recipes
 
