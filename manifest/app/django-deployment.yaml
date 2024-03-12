@@ -31,6 +31,14 @@ spec:
           image: akashbalani/recipe:latest
           ports:
             - containerPort: 8000
+          volumeMounts:
+            - name: backend
+              mountPath: /var/log/
+          command: ["/bin/sh", "-c"]
+          args:
+            - python manage.py makemigrations;
+              python manage.py migrate;
+              python manage.py runserver 0.0.0.0:8000
           env:
             - name: MYSQL_DATABASE
               valueFrom:
@@ -79,6 +87,9 @@ spec:
         - name: init-script-volume
           persistentVolumeClaim:
             claimName: init-script-pvc
+        - name: backend
+          hostPath:
+            path: /var/log/
 ---
 apiVersion: v1
 kind: Service

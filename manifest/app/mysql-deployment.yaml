@@ -18,6 +18,11 @@ spec:
       containers:
         - name: mysql-container
           image: mysql:latest
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/log/
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -39,6 +44,10 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: password
+      volumes:
+        - name: mysql-persistent-storage
+          hostPath:
+            path: /var/log/
 ---
 apiVersion: v1
 kind: Service
